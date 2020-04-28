@@ -15,6 +15,7 @@ export interface ResponseBase {
     message?: string;
     state?: SessionState;
     loginTimestamp?: Date;
+    userId?: string;
   };
 }
 
@@ -31,4 +32,5 @@ export interface SessionArgs {
   sessionId?: string;
   sessionData?: string;
   loginTimestamp?: Date;
+  userId?: string;
 }

@@ -35,6 +35,10 @@ export function validateSessionCreateArgs(args: SessionArgs): void {
     throw new DatabaseError('Can not create session, no sessionId passed');
   }
 
+  if (!args.userId) {
+    throw new DatabaseError('Can not create session, no userId passed');
+  }
+
   if (!args.loginTimestamp) {
     throw new DatabaseError('Can not create session, no loginTimestamp');
   }

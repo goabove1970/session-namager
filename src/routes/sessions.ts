@@ -2,7 +2,7 @@ import { SessionResponse, SessionRequest, SessionRequestType, SessionArgs } from
 import { Router } from 'express';
 import { SessionError } from '@root/src/models/errors';
 import * as moment from 'moment';
-import { sessionProcessor } from '../controllers/SessionProcessor';
+import { sessionController } from '../controllers/session-controller';
 import { GuidFull } from '../utils/generateGuid';
 import logger from '../logger';
 import { Session } from '../models/session';
@@ -63,18 +63,20 @@ async function processInitSessionRequest(args: SessionArgs): Promise<SessionResp
     sessionId: GuidFull(),
     loginTimestamp: moment().toDate(),
     sessionData: args.sessionData,
+    userId: args.userId,
   };
 
   try {
-    await sessionProcessor.create(newSession);
+    await sessionController.create(newSession);
     response.payload = {
       ...response.payload,
       sessionId: newSession.sessionId,
       loginTimestamp: newSession.loginTimestamp,
+      userId: newSession.userId,
     };
   } catch (error) {
-    console.error(error.message);
-    response.error = error.message;
+    console.error(error.message || error);
+    response.error = error.message || error;
   }
   return response;
 }
@@ -93,7 +95,7 @@ async function processExtendSessionRequest(args: SessionArgs): Promise<SessionRe
   };
 
   try {
-    const sessions = await sessionProcessor.read({ sessionId: args.sessionId });
+    const sessions = await sessionController.read({ sessionId: args.sessionId });
     if (!sessions || !sessions.length || sessions.length !== 1) {
       const error = `Can not extend session ${args.sessionId}, session was not found, please relogin`;
       logger.error(error);
@@ -110,14 +112,14 @@ async function processExtendSessionRequest(args: SessionArgs): Promise<SessionRe
       return response;
     }
 
-    await sessionProcessor.update(newSession);
+    await sessionController.update(newSession);
     response.payload = {
       ...response.payload,
       loginTimestamp: newSession.loginTimestamp,
     };
   } catch (error) {
-    console.error(error.message);
-    response.error = error.message;
+    console.error(error.message || error);
+    response.error = error.message || error;
   }
   return response;
 }
@@ -131,7 +133,7 @@ async function processValidateSessionRequest(args: SessionArgs): Promise<Session
   };
 
   try {
-    const sessions = await sessionProcessor.read({ sessionId: args.sessionId });
+    const sessions = await sessionController.read({ sessionId: args.sessionId });
     if (!sessions || !sessions.length || sessions.length !== 1) {
       response.payload = {
         ...response.payload,
@@ -146,8 +148,8 @@ async function processValidateSessionRequest(args: SessionArgs): Promise<Session
       state: expired(session) ? 'EXPIRED' : 'ACTIVE',
     };
   } catch (error) {
-    console.error(error.message);
-    response.error = error.message;
+    console.error(error.message || error);
+    response.error = error.message || error;
   }
   return response;
 }
@@ -161,7 +163,7 @@ async function processTerminateSessionRequest(args: SessionArgs): Promise<Sessio
   };
 
   try {
-    const sessions = await sessionProcessor.read({ sessionId: args.sessionId });
+    const sessions = await sessionController.read({ sessionId: args.sessionId });
     if (!sessions || !sessions.length || sessions.length !== 1) {
       const error = `Can not terminate session ${args.sessionId}, session was not found.`;
       logger.error(error);
@@ -178,14 +180,14 @@ async function processTerminateSessionRequest(args: SessionArgs): Promise<Sessio
       response.payload = {
         message: 'Session has expired prior to termination request. This is not considered to be an error.',
       };
-      await sessionProcessor.delete({ sessionId: args.sessionId });
+      await sessionController.delete({ sessionId: args.sessionId });
       return response;
     }
 
-    await sessionProcessor.delete({ sessionId: args.sessionId });
+    await sessionController.delete({ sessionId: args.sessionId });
   } catch (error) {
-    console.error(error.message);
-    response.error = error.message;
+    console.error(error.message || error);
+    response.error = error.message || error;
   }
   return response;
 }

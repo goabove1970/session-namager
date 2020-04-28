@@ -33,6 +33,10 @@ export class SessionPersistenceController implements SessionPersistanceControlle
       updateFields.push(`login_timestamp='${moment(args.loginTimestamp).toISOString()}'`);
     }
 
+    if (args.userId) {
+      updateFields.push(`user_id='userId'`);
+    }
+
     const updateStatement = updateFields.join(',\n');
 
     this.dataController.update(`
@@ -49,11 +53,13 @@ export class SessionPersistenceController implements SessionPersistanceControlle
         (
             session_id,
             session_data,
-            login_timestamp)
+            login_timestamp,
+            user_id)
             VALUES (
                 '${args.sessionId}',
                 ${args.sessionData ? "'" + args.sessionData + "'" : 'NULL'},
-                '${moment(args.loginTimestamp).toISOString()}');`);
+                '${moment(args.loginTimestamp).toISOString()}',
+                '${args.userId}');`);
   }
 
   async delete(args: SessionArgs): Promise<void> {

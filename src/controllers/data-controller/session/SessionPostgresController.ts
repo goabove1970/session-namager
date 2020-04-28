@@ -14,6 +14,7 @@ export class SessionPostgresController extends DatabaseController<Session> {
         sessionId: valueRow[0],
         loginTimestamp: valueRow[1],
         sessionData: valueRow[2],
+        userId: valueRow[3],
       } as Session);
     });
 
