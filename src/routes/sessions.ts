@@ -116,6 +116,7 @@ async function processExtendSessionRequest(args: SessionArgs): Promise<SessionRe
     response.payload = {
       ...response.payload,
       loginTimestamp: newSession.loginTimestamp,
+      userId: session.userId,
     };
   } catch (error) {
     console.error(error.message || error);
