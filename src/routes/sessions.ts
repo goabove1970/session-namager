@@ -9,6 +9,8 @@ import { Session } from '../models/session';
 
 const router = Router();
 
+const logoutAfterMinutes = 15;
+
 const process = async function(req, res, next) {
   const sessionRequest = req.body as SessionRequest;
   if (!sessionRequest) {
@@ -48,12 +50,12 @@ const expired = (sess?: Session): boolean => {
 
   if (
     moment(sess.loginTimestamp).isBefore(moment()) &&
-    moment(sess.loginTimestamp).isAfter(moment().subtract(15, 'minute'))
+    moment(sess.loginTimestamp).isAfter(moment().subtract(logoutAfterMinutes, 'minute'))
   ) {
-    return true;
+    return false;
   }
 
-  return false;
+  return true;
 };
 
 async function processInitSessionRequest(args: SessionArgs): Promise<SessionResponse> {
