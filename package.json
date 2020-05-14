@@ -1,15 +1,15 @@
 {
   "name": "dinero-session-manager",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "private": true,
   "scripts": {
-    "start": "node ./dist/bin/www",
+    "start": "node ./release/bin/www",
     "build": "npm run compile",
     "build:ts": "tsc",
     "compile": "npm run build:ts",
     "prettier:check": "prettier --check \"./**/*.{js,ts,tsx,json,scss,md}\"",
     "prettier:write": "prettier --write \"./**/*.{js,ts,tsx,json,scss,md}\"",
-    "pack": "npm-pack-zip"
+    "pack": "pack-zip"
   },
   "dependencies": {
     "cors": "^2.8.4",
@@ -33,6 +33,7 @@
     "@types/node": "^12.11.1",
     "grunt-bump": "^0.8.0",
     "npm-pack-zip": "^1.2.7",
+    "pack-zip": "^0.2.2",
     "typescript": "^3.7.0-dev.20191021"
   },
   "_moduleAliases": {
