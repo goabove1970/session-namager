@@ -9,7 +9,7 @@
     "compile": "npm run build:ts",
     "prettier:check": "prettier --check \"./**/*.{js,ts,tsx,json,scss,md}\"",
     "prettier:write": "prettier --write \"./**/*.{js,ts,tsx,json,scss,md}\"",
-    "pack": "npm-pack-zip"
+    "pack": "node ./pack.js"
   },
   "dependencies": {
     "cors": "^2.8.4",
