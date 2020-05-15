@@ -15,26 +15,22 @@
     "cors": "^2.8.4",
     "debug": "~2.6.9",
     "express": "~4.16.0",
-    "grunt": "^1.1.0",
-    "grunt-contrib-concat": "^1.0.1",
-    "grunt-contrib-jshint": "^2.1.0",
-    "grunt-contrib-uglify": "^4.0.1",
-    "grunt-contrib-watch": "^1.1.0",
     "guid-typescript": "^1.0.9",
     "http-errors": "^1.7.3",
     "module-alias": "^2.2.2",
     "moment": "^2.24.0",
-    "prettier": "^1.18.2",
-    "ts-postgres": "^1.1.0",
-    "tsc": "^1.20150623.0",
     "winston": "^3.2.1"
   },
   "devDependencies": {
     "@types/node": "^12.11.1",
+    "grunt": "^1.1.0",
     "grunt-bump": "^0.8.0",
-    "npm-pack-zip": "^1.2.7",
     "pack-zip": "^0.2.2",
-    "typescript": "^3.7.0-dev.20191021"
+    "prettier": "^1.18.2",
+    "ts-postgres": "^1.1.0",
+    "tsc": "^1.20150623.0",
+    "typescript": "^3.7.0-dev.20191021",
+    "zip-folder": "^1.0.0"
   },
   "_moduleAliases": {
     "@root": "dist",
