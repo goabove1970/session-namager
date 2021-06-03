@@ -12,11 +12,16 @@ export const CONFIG: ApplicationConfig = {
     password: 'a84hg7dT!!a',
     database: 'postgres',
     schema: 'public',
-    // host: '127.0.0.1',
-    // port: 5432,
-    // login: 'postgres',
-    // password: 'admin',
-    // database: 'postgres',
-    // schema: 'public',
+  },
+};
+
+export const LOCAL_CONFIG: ApplicationConfig = {
+  PgConfig: {
+    host: '127.0.0.1',
+    port: 5432,
+    login: 'postgres',
+    password: 'admin',
+    database: 'postgres',
+    schema: 'public',
   },
 };
