@@ -1,6 +1,6 @@
 {
   "name": "dinero-session-manager",
-  "version": "0.11.0",
+  "version": "1.0.0",
   "private": true,
   "scripts": {
     "start": "node ./dist/bin/www",
