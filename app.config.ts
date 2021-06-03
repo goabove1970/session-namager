@@ -6,11 +6,17 @@ export interface ApplicationConfig {
 
 export const CONFIG: ApplicationConfig = {
   PgConfig: {
-    host: 'dinero-db.cmi7wgy95mjp.us-east-2.rds.amazonaws.com',
+    host: '134.122.16.140',
     port: 5432,
-    login: 'postgres',
-    password: 'G62LHttp9FF9',
+    login: 'zhenia',
+    password: 'a84hg7dT!!a',
     database: 'postgres',
     schema: 'public',
+    // host: '127.0.0.1',
+    // port: 5432,
+    // login: 'postgres',
+    // password: 'admin',
+    // database: 'postgres',
+    // schema: 'public',
   },
 };
