@@ -1,6 +1,6 @@
 import pool from './database/PgPool';
 import { Value, Result } from 'ts-postgres';
-import { CONFIG } from '@root/app.config';
+import { getConfig } from '@root/app.config';
 
 export abstract class DataController<T> {}
 
@@ -18,12 +18,12 @@ export abstract class DatabaseController<T> extends DataController<T> {
     }
 
     delete(where?: string): Promise<Result> {
-        return pool.query(`DELETE FROM ${CONFIG.PgConfig.schema}.${this.tableName} ${where}`);
+        return pool.query(`DELETE FROM ${getConfig().PgConfig.schema}.${this.tableName} ${where}`);
     }
 
     select(where?: string, fields?: string): Promise<T[]> {
         return pool
-            .query(`SELECT ${fields ? fields : '*'} FROM ${CONFIG.PgConfig.schema}.${this.tableName} ${where}`)
+            .query(`SELECT ${fields ? fields : '*'} FROM ${getConfig().PgConfig.schema}.${this.tableName} ${where}`)
             .then((value) => {
                 const { rows } = value;
                 const categories = this.readSelectResponse(rows);
@@ -33,7 +33,7 @@ export abstract class DatabaseController<T> extends DataController<T> {
 
     count(where?: string): Promise<number> {
         return pool
-            .query(`SELECT * FROM ${CONFIG.PgConfig.schema}.${this.tableName} ${where ? where : ''};`)
+            .query(`SELECT * FROM ${getConfig().PgConfig.schema}.${this.tableName} ${where ? where : ''};`)
             .then((value) => {
                 const { rows } = value;
                 return rows.length;
@@ -41,10 +41,10 @@ export abstract class DatabaseController<T> extends DataController<T> {
     }
 
     update(where?: string): Promise<Result> {
-        return pool.query(`UPDATE ${CONFIG.PgConfig.schema}.${this.tableName} ${where}`);
+        return pool.query(`UPDATE ${getConfig().PgConfig.schema}.${this.tableName} ${where}`);
     }
 
     insert(where?: string): Promise<Result> {
-        return pool.query(`INSERT INTO ${CONFIG.PgConfig.schema}.${this.tableName} ${where}`);
+        return pool.query(`INSERT INTO ${getConfig().PgConfig.schema}.${this.tableName} ${where}`);
     }
 }

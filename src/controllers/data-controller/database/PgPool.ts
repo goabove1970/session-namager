@@ -1,6 +1,6 @@
 import { Client, Configuration, Result } from 'ts-postgres';
 import { PgConfig } from './PgConfig';
-import { CONFIG } from '@root/app.config';
+import { getConfig } from '@root/app.config';
 import logger from '@root/src/logger';
 
 export class PgPool {
@@ -52,5 +52,5 @@ export class PgPool {
   }
 }
 
-const pool = new PgPool(CONFIG.PgConfig);
+const pool = new PgPool(getConfig().PgConfig);
 export default pool;

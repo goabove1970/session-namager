@@ -4,7 +4,7 @@ export interface ApplicationConfig {
   PgConfig?: PgConfig;
 }
 
-export const CONFIG: ApplicationConfig = {
+const CONFIG: ApplicationConfig = {
   PgConfig: {
     host: '134.122.16.140',
     port: 5432,
@@ -15,7 +15,7 @@ export const CONFIG: ApplicationConfig = {
   },
 };
 
-export const LOCAL_CONFIG: ApplicationConfig = {
+const LOCAL_CONFIG: ApplicationConfig = {
   PgConfig: {
     host: '127.0.0.1',
     port: 5432,
@@ -25,3 +25,11 @@ export const LOCAL_CONFIG: ApplicationConfig = {
     schema: 'public',
   },
 };
+
+
+export const getConfig = (): ApplicationConfig => {
+  if (process.env.NODE_ENV === 'development') {
+      return LOCAL_CONFIG;
+  }
+  return CONFIG;
+}
