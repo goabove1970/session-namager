@@ -1,4 +1,9 @@
-import { SessionResponse, SessionRequest, SessionRequestType, SessionArgs } from './session-request';
+import {
+  SessionResponse,
+  SessionRequest,
+  SessionRequestType,
+  SessionArgs,
+} from './session-request';
 import { Router } from 'express';
 import { SessionError } from '@root/src/models/errors';
 import * as moment from 'moment';
@@ -6,6 +11,7 @@ import { sessionController } from '../controllers/session-controller';
 import { GuidFull } from '../utils/generateGuid';
 import logger from '../logger';
 import { Session } from '../models/session';
+import { inspect } from 'util';
 
 const router = Router();
 
@@ -50,7 +56,9 @@ const expired = (sess?: Session): boolean => {
 
   if (
     moment(sess.loginTimestamp).isBefore(moment()) &&
-    moment(sess.loginTimestamp).isAfter(moment().subtract(logoutAfterMinutes, 'minute'))
+    moment(sess.loginTimestamp).isAfter(
+      moment().subtract(logoutAfterMinutes, 'minute')
+    )
   ) {
     return false;
   }
@@ -58,8 +66,13 @@ const expired = (sess?: Session): boolean => {
   return true;
 };
 
-async function processInitSessionRequest(args: SessionArgs): Promise<SessionResponse> {
-  const response: SessionResponse = { action: SessionRequestType.Init, payload: {} };
+async function processInitSessionRequest(
+  args: SessionArgs
+): Promise<SessionResponse> {
+  const response: SessionResponse = {
+    action: SessionRequestType.Init,
+    payload: {},
+  };
 
   const newSession: SessionArgs = {
     sessionId: GuidFull(),
@@ -77,13 +90,15 @@ async function processInitSessionRequest(args: SessionArgs): Promise<SessionResp
       userId: newSession.userId,
     };
   } catch (error) {
-    console.error(error.message || error);
-    response.error = error.message || error;
+    console.error(inspect(error));
+    response.error = inspect(error);
   }
   return response;
 }
 
-async function processExtendSessionRequest(args: SessionArgs): Promise<SessionResponse> {
+async function processExtendSessionRequest(
+  args: SessionArgs
+): Promise<SessionResponse> {
   const response: SessionResponse = {
     action: SessionRequestType.Extend,
     payload: {
@@ -97,7 +112,9 @@ async function processExtendSessionRequest(args: SessionArgs): Promise<SessionRe
   };
 
   try {
-    const sessions = await sessionController.read({ sessionId: args.sessionId });
+    const sessions = await sessionController.read({
+      sessionId: args.sessionId,
+    });
     if (!sessions || !sessions.length || sessions.length !== 1) {
       const error = `Can not extend session ${args.sessionId}, session was not found, please relogin`;
       logger.error(error);
@@ -121,13 +138,15 @@ async function processExtendSessionRequest(args: SessionArgs): Promise<SessionRe
       userId: session.userId,
     };
   } catch (error) {
-    console.error(error.message || error);
-    response.error = error.message || error;
+    console.error(inspect(error));
+    response.error = inspect(error);
   }
   return response;
 }
 
-async function processValidateSessionRequest(args: SessionArgs): Promise<SessionResponse> {
+async function processValidateSessionRequest(
+  args: SessionArgs
+): Promise<SessionResponse> {
   const response: SessionResponse = {
     action: SessionRequestType.Validate,
     payload: {
@@ -136,7 +155,9 @@ async function processValidateSessionRequest(args: SessionArgs): Promise<Session
   };
 
   try {
-    const sessions = await sessionController.read({ sessionId: args.sessionId });
+    const sessions = await sessionController.read({
+      sessionId: args.sessionId,
+    });
     if (!sessions || !sessions.length || sessions.length !== 1) {
       response.payload = {
         ...response.payload,
@@ -151,13 +172,15 @@ async function processValidateSessionRequest(args: SessionArgs): Promise<Session
       state: expired(session) ? 'EXPIRED' : 'ACTIVE',
     };
   } catch (error) {
-    console.error(error.message || error);
-    response.error = error.message || error;
+    console.error(inspect(error));
+    response.error = inspect(error);
   }
   return response;
 }
 
-async function processTerminateSessionRequest(args: SessionArgs): Promise<SessionResponse> {
+async function processTerminateSessionRequest(
+  args: SessionArgs
+): Promise<SessionResponse> {
   const response: SessionResponse = {
     action: SessionRequestType.Terminate,
     payload: {
@@ -166,12 +189,15 @@ async function processTerminateSessionRequest(args: SessionArgs): Promise<Sessio
   };
 
   try {
-    const sessions = await sessionController.read({ sessionId: args.sessionId });
+    const sessions = await sessionController.read({
+      sessionId: args.sessionId,
+    });
     if (!sessions || !sessions.length || sessions.length !== 1) {
       const error = `Can not terminate session ${args.sessionId}, session was not found.`;
       logger.error(error);
       response.payload = {
-        message: 'Session was not found, nothing to terminate. This is not considered to be an error.',
+        message:
+          'Session was not found, nothing to terminate. This is not considered to be an error.',
       };
       return response;
     }
@@ -181,7 +207,8 @@ async function processTerminateSessionRequest(args: SessionArgs): Promise<Sessio
       const error = `Can not terminate session ${args.sessionId}, session has alread expired.`;
       logger.info(error);
       response.payload = {
-        message: 'Session has expired prior to termination request. This is not considered to be an error.',
+        message:
+          'Session has expired prior to termination request. This is not considered to be an error.',
       };
       await sessionController.delete({ sessionId: args.sessionId });
       return response;
@@ -189,8 +216,8 @@ async function processTerminateSessionRequest(args: SessionArgs): Promise<Sessio
 
     await sessionController.delete({ sessionId: args.sessionId });
   } catch (error) {
-    console.error(error.message || error);
-    response.error = error.message || error;
+    console.error(inspect(error));
+    response.error = inspect(error);
   }
   return response;
 }

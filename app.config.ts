@@ -26,10 +26,9 @@ const LOCAL_CONFIG: ApplicationConfig = {
   },
 };
 
-
 export const getConfig = (): ApplicationConfig => {
   if (process.env.NODE_ENV === 'development') {
-      return LOCAL_CONFIG;
+    return LOCAL_CONFIG;
   }
   return CONFIG;
-}
+};
