@@ -29,7 +29,7 @@
   },
   "devDependencies": {
     "@types/node": "^12.11.1",
-    "grunt": "^1.1.0",
+    "grunt": "^1.5.3",
     "grunt-bump": "^0.8.0",
     "pack-zip": "^0.2.2",
     "prettier": "^1.18.2",
