@@ -19,7 +19,7 @@
   "dependencies": {
     "cors": "^2.8.4",
     "debug": "~2.6.9",
-    "express": "~4.16.0",
+    "express": "~4.17.3",
     "guid-typescript": "^1.0.9",
     "http-errors": "^1.7.3",
     "module-alias": "^2.2.2",
