@@ -1,23 +1,23 @@
-module.exports = function(grunt) {
-  grunt.loadNpmTasks('grunt-bump');
+module.exports = function (grunt) {
+  grunt.loadNpmTasks("grunt-bump");
 
   grunt.initConfig({
     bump: {
       options: {
-        files: ['package.json'],
+        files: ["package.json"],
         updateConfigs: [],
         commit: true,
-        commitMessage: 'Release v%VERSION%',
-        commitFiles: ['package.json'],
+        commitMessage: "Release v%VERSION%",
+        commitFiles: ["package.json"],
         createTag: true,
-        tagName: 'v%VERSION%',
-        tagMessage: 'Version %VERSION%',
+        tagName: "v%VERSION%",
+        tagMessage: "Version %VERSION%",
         push: true,
-        pushTo: 'upstream',
-        gitDescribeOptions: '--tags --always --abbrev=1 --dirty=-d',
+        pushTo: "upstream",
+        gitDescribeOptions: "--tags --always --abbrev=1 --dirty=-d",
         globalReplace: false,
         prereleaseName: false,
-        metadata: '',
+        metadata: "",
         regExp: false,
       },
     },

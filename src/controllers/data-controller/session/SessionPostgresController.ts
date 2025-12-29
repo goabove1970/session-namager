@@ -1,10 +1,10 @@
-import { DatabaseController } from '../DataController';
-import { Value } from 'ts-postgres';
-import { Session } from '@root/src/models/session';
+import { DatabaseController } from "../DataController";
+import { Value } from "ts-postgres";
+import { Session } from "@root/src/models/session";
 
 export class SessionPostgresController extends DatabaseController<Session> {
   constructor() {
-    super('session');
+    super("session");
   }
 
   readSelectResponse(values: Value[][]): Session[] {
@@ -22,4 +22,5 @@ export class SessionPostgresController extends DatabaseController<Session> {
   }
 }
 
-export const sessionPostgresDataController: DatabaseController<Session> = new SessionPostgresController();
+export const sessionPostgresDataController: DatabaseController<Session> =
+  new SessionPostgresController();

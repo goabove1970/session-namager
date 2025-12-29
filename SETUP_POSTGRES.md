@@ -5,11 +5,13 @@
 ### Option 1: Using Homebrew (Recommended)
 
 1. **Install Homebrew** (if not already installed):
+
    ```bash
    /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
    ```
 
 2. **Install PostgreSQL**:
+
    ```bash
    brew install postgresql@15
    ```
@@ -72,6 +74,7 @@ psql postgres
 ```
 
 Then in the PostgreSQL prompt:
+
 ```sql
 ALTER USER postgres WITH PASSWORD 'admin';
 \q
@@ -89,6 +92,7 @@ psql -U postgres -d postgres -f database/session.sql
 If prompted for a password, enter `admin` (or whatever password you set).
 
 **Note**: If the table already exists and you need to update it, you can add the missing `user_id` column:
+
 ```sql
 ALTER TABLE public.session ADD COLUMN IF NOT EXISTS user_id character varying;
 ALTER TABLE public.session ALTER COLUMN login_timestamp TYPE timestamp without time zone;
@@ -101,6 +105,7 @@ psql -U postgres -d postgres
 ```
 
 Then:
+
 ```sql
 \dt  -- List tables (should show 'session' table)
 \d session  -- Show session table structure
@@ -125,6 +130,7 @@ If you need different credentials, update the `LOCAL_CONFIG` object in `app.conf
 ### Connection Issues
 
 1. **Check if PostgreSQL is running**:
+
    ```bash
    brew services list  # If using Homebrew
    # or
@@ -132,6 +138,7 @@ If you need different credentials, update the `LOCAL_CONFIG` object in `app.conf
    ```
 
 2. **Start PostgreSQL service**:
+
    ```bash
    brew services start postgresql@15
    # or if using Postgres.app, start the app
@@ -145,9 +152,9 @@ If you need different credentials, update the `LOCAL_CONFIG` object in `app.conf
 ### Permission Issues
 
 If you get permission errors, try:
+
 ```bash
 psql -U $(whoami) -d postgres
 ```
 
 Then grant privileges as shown above.
-

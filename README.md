@@ -30,17 +30,20 @@ cd session-namager
 ### 2. Install PostgreSQL
 
 #### macOS (Homebrew)
+
 ```bash
 brew install postgresql@15
 brew services start postgresql@15
 ```
 
 #### macOS (Postgres.app)
+
 1. Download from https://postgresapp.com/
 2. Install and initialize a new server
 3. Add PostgreSQL to your PATH
 
 #### Linux
+
 ```bash
 sudo apt-get update
 sudo apt-get install postgresql postgresql-contrib
@@ -48,17 +51,20 @@ sudo systemctl start postgresql
 ```
 
 #### Windows
+
 Download and install from https://www.postgresql.org/download/windows/
 
 ### 3. Setup Database
 
 Run the setup script:
+
 ```bash
 chmod +x scripts/setup-db.sh
 ./scripts/setup-db.sh
 ```
 
 Or manually:
+
 ```bash
 # Connect to PostgreSQL
 psql -U postgres -d postgres
@@ -83,12 +89,12 @@ Edit `app.config.ts` to match your PostgreSQL settings:
 ```typescript
 const LOCAL_CONFIG: ApplicationConfig = {
   PgConfig: {
-    host: '127.0.0.1',      // Database host
-    port: 5432,             // Database port
-    login: 'postgres',      // Database user
-    password: 'admin',      // Database password
-    database: 'postgres',     // Database name
-    schema: 'public',       // Schema name
+    host: "127.0.0.1", // Database host
+    port: 5432, // Database port
+    login: "postgres", // Database user
+    password: "admin", // Database password
+    database: "postgres", // Database name
+    schema: "public", // Schema name
   },
 };
 ```
@@ -175,6 +181,7 @@ All endpoints accept `POST` and `GET` requests to `/session`.
 Create a new session for a user.
 
 **Request:**
+
 ```bash
 curl -X POST http://localhost:9200/session \
   -H "Content-Type: application/json" \
@@ -188,6 +195,7 @@ curl -X POST http://localhost:9200/session \
 ```
 
 **Response:**
+
 ```json
 {
   "action": "init",
@@ -200,9 +208,11 @@ curl -X POST http://localhost:9200/session \
 ```
 
 **Required Fields:**
+
 - `args.userId` (string, required)
 
 **Optional Fields:**
+
 - `args.sessionData` (string, optional)
 
 ### 2. Extend Session
@@ -210,6 +220,7 @@ curl -X POST http://localhost:9200/session \
 Extend the lifetime of an existing active session.
 
 **Request:**
+
 ```bash
 curl -X POST http://localhost:9200/session \
   -H "Content-Type: application/json" \
@@ -222,6 +233,7 @@ curl -X POST http://localhost:9200/session \
 ```
 
 **Response:**
+
 ```json
 {
   "action": "extend",
@@ -234,6 +246,7 @@ curl -X POST http://localhost:9200/session \
 ```
 
 **Error Response (session not found):**
+
 ```json
 {
   "action": "extend",
@@ -246,6 +259,7 @@ curl -X POST http://localhost:9200/session \
 ```
 
 **Error Response (session expired):**
+
 ```json
 {
   "action": "extend",
@@ -258,6 +272,7 @@ curl -X POST http://localhost:9200/session \
 ```
 
 **Required Fields:**
+
 - `args.sessionId` (string, required)
 
 ### 3. Validate Session
@@ -265,6 +280,7 @@ curl -X POST http://localhost:9200/session \
 Check if a session is active or expired.
 
 **Request:**
+
 ```bash
 curl -X POST http://localhost:9200/session \
   -H "Content-Type: application/json" \
@@ -277,6 +293,7 @@ curl -X POST http://localhost:9200/session \
 ```
 
 **Response (Active):**
+
 ```json
 {
   "action": "validate",
@@ -288,6 +305,7 @@ curl -X POST http://localhost:9200/session \
 ```
 
 **Response (Expired):**
+
 ```json
 {
   "action": "validate",
@@ -299,6 +317,7 @@ curl -X POST http://localhost:9200/session \
 ```
 
 **Required Fields:**
+
 - `args.sessionId` (string, required)
 
 ### 4. Terminate Session
@@ -306,6 +325,7 @@ curl -X POST http://localhost:9200/session \
 End a session (deletes it from the database).
 
 **Request:**
+
 ```bash
 curl -X POST http://localhost:9200/session \
   -H "Content-Type: application/json" \
@@ -318,6 +338,7 @@ curl -X POST http://localhost:9200/session \
 ```
 
 **Response:**
+
 ```json
 {
   "action": "terminate",
@@ -328,6 +349,7 @@ curl -X POST http://localhost:9200/session \
 ```
 
 **Response (session not found - not an error):**
+
 ```json
 {
   "action": "terminate",
@@ -339,6 +361,7 @@ curl -X POST http://localhost:9200/session \
 ```
 
 **Required Fields:**
+
 - `args.sessionId` (string, required)
 
 ## Running Tests
@@ -382,11 +405,13 @@ The integration test suite includes **14 tests** covering:
    - ✅ Full session lifecycle: init → extend → validate → terminate
 
 **Test Configuration:**
+
 - Tests target the running server on `http://localhost:9200`
 - Default timeout: 5 seconds per test
 - Database connection is established before tests run
 
 **Expected Results:**
+
 - All 14 tests should pass
 - Total execution time: ~3-4 seconds
 
@@ -450,12 +475,12 @@ Edit `app.config.ts` to configure database connection:
 ```typescript
 const LOCAL_CONFIG: ApplicationConfig = {
   PgConfig: {
-    host: '127.0.0.1',
+    host: "127.0.0.1",
     port: 5432,
-    login: 'postgres',
-    password: 'admin',
-    database: 'postgres',
-    schema: 'public',
+    login: "postgres",
+    password: "admin",
+    database: "postgres",
+    schema: "public",
   },
 };
 ```
@@ -469,6 +494,7 @@ Sessions expire after **15 minutes** of inactivity. The expiration is checked ba
 ### Database Connection Issues
 
 1. **Check PostgreSQL is running:**
+
    ```bash
    pg_isready
    # or
@@ -478,6 +504,7 @@ Sessions expire after **15 minutes** of inactivity. The expiration is checked ba
 2. **Verify connection settings** in `app.config.ts`
 
 3. **Check database exists:**
+
    ```bash
    psql -U postgres -d postgres -c "\l"
    ```
@@ -515,4 +542,3 @@ Private project
 ## Version
 
 3.2.0
-

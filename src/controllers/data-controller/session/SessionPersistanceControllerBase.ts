@@ -1,5 +1,5 @@
-import { Session } from '@root/src/models/session';
-import { SessionArgs } from '@root/src/routes/session-request';
+import { Session } from "@root/src/models/session";
+import { SessionArgs } from "@root/src/routes/session-request";
 
 export abstract class SessionPersistanceControllerReadonlyBase {
   abstract read(args: SessionArgs): Promise<Session[]>;

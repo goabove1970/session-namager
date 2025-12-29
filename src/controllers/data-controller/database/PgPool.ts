@@ -1,7 +1,7 @@
-import { Client, Configuration, Result } from 'ts-postgres';
-import { PgConfig } from './PgConfig';
-import { getConfig } from '@root/app.config';
-import logger from '@root/src/logger';
+import { Client, Configuration, Result } from "ts-postgres";
+import { PgConfig } from "./PgConfig";
+import { getConfig } from "@root/app.config";
+import logger from "@root/src/logger";
 
 export class PgPool {
   private client: Client;
@@ -30,9 +30,11 @@ export class PgPool {
     this.connectionPromise = this.client
       .connect()
       .then(() => {
-        this.client.on('error', console.error);
+        this.client.on("error", console.error);
         if (!this.client.closed) {
-          logger.info(`Conneted to the database: ${this.client.config.database}:${this.client.config.port}`);
+          logger.info(
+            `Conneted to the database: ${this.client.config.database}:${this.client.config.port}`,
+          );
         }
       })
       .catch((error) => {
@@ -44,16 +46,18 @@ export class PgPool {
   async query(query?: string): Promise<Result> {
     // Ensure connection is ready before executing query
     await this.connectionPromise;
-    
+
     // Check if connection is closed and reconnect if needed
     if (this.client.closed) {
-      logger.warn('Database connection closed, reconnecting...');
+      logger.warn("Database connection closed, reconnecting...");
       this.connectionPromise = this.client
         .connect()
         .then(() => {
-          this.client.on('error', console.error);
+          this.client.on("error", console.error);
           if (!this.client.closed) {
-            logger.info(`Reconnected to the database: ${this.client.config.database}:${this.client.config.port}`);
+            logger.info(
+              `Reconnected to the database: ${this.client.config.database}:${this.client.config.port}`,
+            );
           }
         })
         .catch((error) => {
@@ -62,7 +66,7 @@ export class PgPool {
         });
       await this.connectionPromise;
     }
-    
+
     logger.debug(`Running database query: [${query}]`);
     return this.client
       .query(query)

@@ -17,3 +17,4 @@ export class SessionError extends ErrorBase {
     super(errorMesage || 'could not process session request');
   }
 }
+

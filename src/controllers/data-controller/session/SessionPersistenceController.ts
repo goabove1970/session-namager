@@ -1,11 +1,15 @@
-import { SessionPersistanceControllerBase } from './SessionPersistanceControllerBase';
-import { DatabaseController } from '../DataController';
-import { sessionPostgresDataController } from './SessionPostgresController';
-import moment = require('moment');
-import { Session } from '@root/src/models/session';
-import { SessionArgs } from '@root/src/routes/session-request';
-import { validateSessionUpdateArgs, validateSessionCreateArgs, matchesReadArgs } from './helper';
-import { DatabaseError } from '@root/src/models/errors';
+import { SessionPersistanceControllerBase } from "./SessionPersistanceControllerBase";
+import { DatabaseController } from "../DataController";
+import { sessionPostgresDataController } from "./SessionPostgresController";
+import moment = require("moment");
+import { Session } from "@root/src/models/session";
+import { SessionArgs } from "@root/src/routes/session-request";
+import {
+  validateSessionUpdateArgs,
+  validateSessionCreateArgs,
+  matchesReadArgs,
+} from "./helper";
+import { DatabaseError } from "@root/src/models/errors";
 
 export class SessionPersistenceController implements SessionPersistanceControllerBase {
   private dataController: DatabaseController<Session>;
@@ -18,7 +22,7 @@ export class SessionPersistenceController implements SessionPersistanceControlle
     const session = await this.read(args);
 
     if (!session || session.length === 0) {
-      throw new DatabaseError('session not found');
+      throw new DatabaseError("session not found");
     }
 
     validateSessionUpdateArgs(args);
@@ -30,14 +34,16 @@ export class SessionPersistenceController implements SessionPersistanceControlle
     }
 
     if (args.loginTimestamp) {
-      updateFields.push(`login_timestamp='${moment(args.loginTimestamp).toISOString()}'`);
+      updateFields.push(
+        `login_timestamp='${moment(args.loginTimestamp).toISOString()}'`,
+      );
     }
 
     if (args.userId) {
       updateFields.push(`user_id='${args.userId}'`);
     }
 
-    const updateStatement = updateFields.join(',\n');
+    const updateStatement = updateFields.join(",\n");
 
     await this.dataController.update(`
                 SET
@@ -57,9 +63,9 @@ export class SessionPersistenceController implements SessionPersistanceControlle
             user_id)
             VALUES (
                 '${args.sessionId}',
-                ${args.sessionData ? "'" + args.sessionData + "'" : 'NULL'},
+                ${args.sessionData ? "'" + args.sessionData + "'" : "NULL"},
                 '${moment(args.loginTimestamp).toISOString()}',
-                ${args.userId ? "'" + args.userId + "'" : 'NULL'});`);
+                ${args.userId ? "'" + args.userId + "'" : "NULL"});`);
   }
 
   async delete(args: SessionArgs): Promise<void> {
@@ -76,4 +82,6 @@ export class SessionPersistenceController implements SessionPersistanceControlle
   }
 }
 
-export const sessionDatabaseController = new SessionPersistenceController(sessionPostgresDataController);
+export const sessionDatabaseController = new SessionPersistenceController(
+  sessionPostgresDataController,
+);

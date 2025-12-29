@@ -1,6 +1,6 @@
-import { SessionArgs } from '../../routes/session-request';
-import { sessionDatabaseController } from '../data-controller/session/SessionPersistenceController';
-import { Session } from '../../models/session';
+import { SessionArgs } from "../../routes/session-request";
+import { sessionDatabaseController } from "../data-controller/session/SessionPersistenceController";
+import { Session } from "../../models/session";
 
 export class SessionController {
   update(args: SessionArgs): Promise<void> {

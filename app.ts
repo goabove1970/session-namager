@@ -1,33 +1,33 @@
-require('module-alias/register');
-var express = require('express');
-import * as path from 'path';
-var cors = require('cors');
-var createError = require('http-errors');
+require("module-alias/register");
+var express = require("express");
+import * as path from "path";
+var cors = require("cors");
+var createError = require("http-errors");
 
-import * as sessionRouter from '@root/src/routes/sessions';
-import logger from '@src/logger';
+import * as sessionRouter from "@root/src/routes/sessions";
+import logger from "@src/logger";
 
 export const app = express();
 
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
-app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.static(path.join(__dirname, "public")));
 
-app.use('/session', sessionRouter);
+app.use("/session", sessionRouter);
 
-app.use(function(req, res, next) {
+app.use(function (req, res, next) {
   next(createError(404));
 });
 
-app.use(function(error, req, res, next) {
+app.use(function (error, req, res, next) {
   if (error) {
     logger.error(`Error: ${error.message || error}`);
   }
   const status = error.status || 500;
   res.status(status);
   res.json({
-    error: error.message || 'Internal Server Error',
-    ...(req.app.get('env') === 'development' ? { stack: error.stack } : {}),
+    error: error.message || "Internal Server Error",
+    ...(req.app.get("env") === "development" ? { stack: error.stack } : {}),
   });
 });
