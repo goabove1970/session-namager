@@ -17,7 +17,7 @@ export class SessionPersistenceController implements SessionPersistanceControlle
   async update(args: SessionArgs): Promise<void> {
     const session = await this.read(args);
 
-    if (!session) {
+    if (!session || session.length === 0) {
       throw new DatabaseError('session not found');
     }
 
@@ -34,12 +34,12 @@ export class SessionPersistenceController implements SessionPersistanceControlle
     }
 
     if (args.userId) {
-      updateFields.push(`user_id='userId'`);
+      updateFields.push(`user_id='${args.userId}'`);
     }
 
     const updateStatement = updateFields.join(',\n');
 
-    this.dataController.update(`
+    await this.dataController.update(`
                 SET
                     ${updateStatement}
                 WHERE 
@@ -49,7 +49,7 @@ export class SessionPersistenceController implements SessionPersistanceControlle
   async add(args: SessionArgs): Promise<void> {
     validateSessionCreateArgs(args);
 
-    this.dataController.insert(`
+    await this.dataController.insert(`
         (
             session_id,
             session_data,
@@ -59,14 +59,12 @@ export class SessionPersistenceController implements SessionPersistanceControlle
                 '${args.sessionId}',
                 ${args.sessionData ? "'" + args.sessionData + "'" : 'NULL'},
                 '${moment(args.loginTimestamp).toISOString()}',
-                '${args.userId}');`);
+                ${args.userId ? "'" + args.userId + "'" : 'NULL'});`);
   }
 
   async delete(args: SessionArgs): Promise<void> {
     const expression = await matchesReadArgs(args);
-    this.dataController.delete(expression).catch((error) => {
-      throw error;
-    });
+    await this.dataController.delete(expression);
   }
 
   async read(args: SessionArgs): Promise<Session[]> {
