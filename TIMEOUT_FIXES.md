@@ -130,3 +130,4 @@ npm run test:integration
 4. **Pattern analysis helps**: The pattern (INSERT works, SELECT/UPDATE/DELETE don't) pointed to a specific code path issue
 
 
+

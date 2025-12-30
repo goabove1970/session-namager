@@ -137,3 +137,4 @@ Error codes are defined in `src/models/error-codes.ts` and used throughout the a
 - Error messages are human-readable for debugging
 - Some operations (like terminate on non-existent session) don't return error codes as they're not considered errors
 
+
