@@ -84,6 +84,13 @@ const expired = (sess?: Session): boolean => {
   return true;
 };
 
+const calculateSessionExpires = (loginTimestamp: Date | undefined): Date | undefined => {
+  if (!loginTimestamp) {
+    return undefined;
+  }
+  return moment(loginTimestamp).add(logoutAfterMinutes, 'minute').toDate();
+};
+
 async function processInitSessionRequest(
   args: SessionArgs
 ): Promise<SessionResponse> {
@@ -114,6 +121,7 @@ async function processInitSessionRequest(
       loginTimestamp: newSession.loginTimestamp,
       userId: newSession.userId,
     };
+    response.sessionExpires = calculateSessionExpires(newSession.loginTimestamp);
   } catch (error) {
     console.error(inspect(error));
     const errorMessage = error instanceof Error ? error.message : inspect(error);
@@ -171,6 +179,7 @@ async function processExtendSessionRequest(
       loginTimestamp: newSession.loginTimestamp,
       userId: session.userId,
     };
+    response.sessionExpires = calculateSessionExpires(newSession.loginTimestamp);
   } catch (error) {
     console.error(inspect(error));
     const errorMessage = error instanceof Error ? error.message : inspect(error);
@@ -214,6 +223,10 @@ async function processValidateSessionRequest(
       ...response.payload,
       state: expired(session) ? 'EXPIRED' : 'ACTIVE',
     };
+    // Include expiration time if session is active
+    if (!expired(session) && session.loginTimestamp) {
+      response.sessionExpires = calculateSessionExpires(session.loginTimestamp);
+    }
   } catch (error) {
     console.error(inspect(error));
     const errorMessage = error instanceof Error ? error.message : inspect(error);
@@ -269,6 +282,8 @@ async function processTerminateSessionRequest(
     }
 
     await sessionController.delete({ sessionId: args.sessionId });
+    // Session is terminated, so no expiration time
+    response.sessionExpires = undefined;
   } catch (error) {
     console.error(inspect(error));
     const errorMessage = error instanceof Error ? error.message : inspect(error);

@@ -10,6 +10,7 @@ export type SessionState = 'ACTIVE' | 'EXPIRED';
 export interface ResponseBase {
   error?: string;
   errorCode?: number;
+  sessionExpires?: Date | string;
   payload?: {
     sessionId?: string;
     message?: string;
